@@ -1,7 +1,7 @@
-/**
+/*
 A simple class for controlling hobby servos. Modeled after the ESP8266 Arduino Servo Driver
 OttDIY JavaScript Project, 2020 | sfranzyshen
-**/ 
+*/ 
 
 var ServoHW = function(options) {
   this._pin = undefined;
