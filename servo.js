@@ -1,4 +1,8 @@
-// https://github.com/amperka/espruino-modcat/blob/master/modules/%40amperka/servo.js
+/
+A simple class for controlling hobby servos. Modeled after the ESP8266 Arduino Servo Driver
+modified from https://github.com/amperka/espruino-modcat/blob/master/modules/%40amperka/servo.js
+OttDIY Python Project, 2020 | sfranzyshen
+/ 
 
 var ServoHW = function(options) {
   this._pin = undefined;
