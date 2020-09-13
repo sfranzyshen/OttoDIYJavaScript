@@ -1,14 +1,13 @@
 /**
 A simple class for controlling hobby servos. Modeled after the ESP8266 Arduino Servo Driver
-modified from https://github.com/amperka/espruino-modcat/blob/master/modules/%40amperka/servo.js
-OttDIY Python Project, 2020 | sfranzyshen
+OttDIY JavaScript Project, 2020 | sfranzyshen
 **/ 
 
 var ServoHW = function(options) {
   this._pin = undefined;
   this._freq = 50;
-  this._pulseMin = 0.675;
-  this._pulseMax = 2.325;
+  this._pulseMin = 0.5;
+  this._pulseMax = 2.5;
   this._valueMin = 0;
   this._valueMax = 180;
   this._attached = false;
@@ -42,35 +41,34 @@ ServoHW.prototype.attached = function() {
 ServoHW.prototype.detach = function() {
   digitalWrite(this._pin, 0);
   this._attached = false;
-  return this;
 };
 
 ServoHW.prototype.attach = function(pin) {
   if (pin === undefined) {
-    return this;
+    return;
   }
+  
   this._pin = pin;
   analogWrite(this._pin, 0, {freq: this._freq});
   this._attached = true;
-  return this;
 };
 
 ServoHW.prototype.write = function(value) {
   if (value === undefined) {
-    return this;
+    return;
   }
+  
   value = E.clip(value, this._valueMin, this._valueMax);
   analogWrite(this._pin, this._valueStart + this._valueStep * (value - this._valueMin), { freq: this._freq });
-  return this;
 };
 
 ServoHW.prototype.write_us = function(value) {
   if (value === undefined) {
-    return this;
+    return;
   }
+  
   value = E.clip(value, this._pulseMin * 1000, this._pulseMax * 1000);
   analogWrite(this._pin, value / 1000 / this._period, { freq: this._freq });
-  return this;
 };
 
 exports.init = function(options) {
