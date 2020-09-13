@@ -29,15 +29,16 @@ var OscillatorHW = function(trim) {
   this._rev = false;          // Reverse mode
 };
 
+// Attach an oscillator to a servo
+// Input: pin is the arduino pin were the servo is connected
 OscillatorHW.prototype.attach = function(pin, rev = false) {
-  //-- If the oscillator is detached, attach it.
-  if(!_servo.attached()){
+  if(!_servo.attached()) {    // If the oscillator is detached, attach it.
 
-    //-- Attach the servo and move it to the home position
+    // Attach the servo and move it to the home position
       _servo.attach(pin);
       _servo.write(90);
 
-      //-- Initialization of oscilaltor parameters
+      // Initialization of oscilaltor parameters
       _TS=30;
       _T=2000;
       _N = _T/_TS;
@@ -45,7 +46,7 @@ OscillatorHW.prototype.attach = function(pin, rev = false) {
 
       _previousMillis=0;
 
-      //-- Default parameters
+      // Default parameters
       _A=45;
       _phase=0;
       _phase0=0;
@@ -59,7 +60,7 @@ OscillatorHW.prototype.attach = function(pin, rev = false) {
 };
 
 OscillatorHW.prototype.detach = function() {
-  //-- If the oscillator is attached, detach it.
+  // If the oscillator is attached, detach it.
   if(_servo.attached())
         _servo.detach();
 };
@@ -75,12 +76,13 @@ OscillatorHW.prototype.SetO = function(O) {
 OscillatorHW.prototype.SetPh = function(Ph) {
   this._phase0 = Ph;
 };
-  
+
+// Set the oscillator period, in ms
 OscillatorHW.prototype.SetT = function(T) {
-  //-- Assign the new period
+  // Assign the new period
   _T=T;
   
-  //-- Recalculate the parameters
+  // Recalculate the parameters
   _N = _T/_TS;
   _inc = 2*M_PI/_N;
 };
@@ -92,7 +94,8 @@ OscillatorHW.prototype.SetTrim = function(trim){
 OscillatorHW.prototype.getTrim = function() {
   return this._trim;
 };
-  
+
+// Manual set of the position
 OscillatorHW.prototype.SetPosition = function(position) {
   _servo.write(position+_trim);
 };
@@ -108,32 +111,38 @@ OscillatorHW.prototype.Play = function() {
 OscillatorHW.prototype.Reset = function() {
   this._phase = 0;
 };
-  
+
+// This function should be periodically called
+// in order to maintain the oscillations. It calculates
+// if another sample should be taken and position the servo if so
 OscillatorHW.prototype.refresh = function() {
-  //-- Only When TS milliseconds have passed, the new sample is obtained
+  // Only When TS milliseconds have passed, the new sample is obtained
   if (next_sample()) {
   
-      //-- If the oscillator is not stopped, calculate the servo position
+      // If the oscillator is not stopped, calculate the servo position
       if (!_stop) {
-        //-- Sample the sine function and set the servo pos
+        // Sample the sine function and set the servo pos
          _pos = round(_A * sin(_phase + _phase0) + _O);
 	       if (_rev) _pos=-_pos;
          _servo.write(_pos+90+_trim);
       }
 
-      //-- Increment the phase
-      //-- It is always increased, even when the oscillator is stop
-      //-- so that the coordination is always kept
+      // Increment the phase
+      // It is always increased, even when the oscillator is stop
+      // so that the coordination is always kept
       _phase = _phase + _inc;
 
   }
 };
 
+// This function returns true if another sample
+// should be taken (i.e. the TS time has passed since
+// the last sample was taken
 OscillatorHW.prototype.__next_sample = function() {
-  //-- Read current time
+  // Read current time
   this._currentMillis = getTime();
  
-  //-- Check if the timeout has passed
+  // Check if the timeout has passed
   if(this._currentMillis - this._previousMillis > this._TS) {
     this._previousMillis = this._currentMillis;   
     return true;
