@@ -16,7 +16,7 @@ var OscillatorHW = function(trim) {
   this._phase0 = 0.0          # Phase (radians)
 
   // Internal variables
-  this._servo = servo.Servo() # Servo that is attached to the oscillator
+  this._servo = require('otto_servo').init(); # Servo that is attached to the oscillator
   this._pos = 0               # Current servo pos
   this._trim = trim           # Calibration offset
   this._phase = 0.0           # Current phase
