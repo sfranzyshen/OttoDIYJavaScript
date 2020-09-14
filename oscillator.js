@@ -46,7 +46,7 @@ OscillatorHW.prototype.attach = function(pin, rev) {
     this._servo.write(90);
 
     // Initialization of oscilaltor parameters
-    this._TS = 30 / 1000;
+    this._TS = 30;
     this._T = 2000;
     this._N = this._T / this._TS;
     this._inc = 2 * Math.PI / this._N;
@@ -145,7 +145,7 @@ OscillatorHW.prototype.refresh = function() {
 // the last sample was taken
 OscillatorHW.prototype.__next_sample = function() {
   // Read current time
-  this._currentMillis = getTime();
+  this._currentMillis = getTime() * 1000;
  
   // Check if the timeout has passed
   if(this._currentMillis - this._previousMillis > this._TS) {
