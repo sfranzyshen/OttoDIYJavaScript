@@ -46,11 +46,11 @@ OscillatorHW.prototype.attach = function(pin, rev) {
     this._servo.write(90);
 
     // Initialization of oscilaltor parameters
-    this._TS = 30;
+    this._TS = 30 / 1000;
     this._T = 2000;
     this._N = this._T / this._TS;
     this._inc = 2 * Math.PI / this._N;
-    this._previousMillis = 0;
+    this._previousMillis = 0.0;
 
     // Default parameters
     this._A = 45;
