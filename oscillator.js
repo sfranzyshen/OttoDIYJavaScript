@@ -30,7 +30,7 @@ var OscillatorHW = function(trim) {
 };
 
 // Attach an oscillator to a servo
-// Input: pin is the arduino pin were the servo is connected
+// Input: pin is the data pin were the servo is connected
 OscillatorHW.prototype.attach = function(pin, rev) {
   if(pin === undefined) {
     return;
@@ -103,7 +103,7 @@ OscillatorHW.prototype.getTrim = function() {
 
 // Manual set of the position
 OscillatorHW.prototype.SetPosition = function(position) {
-  _servo.write(position + _trim);
+  this._servo.write(position + this._trim);
 };
 
 OscillatorHW.prototype.Stop = function() {
@@ -157,4 +157,3 @@ OscillatorHW.prototype.__next_sample = function() {
 exports.init = function(options) {
   return new OscillatorHW(options);
 };
-
