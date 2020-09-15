@@ -2,15 +2,15 @@
 OttoDIY JavaScript Project, 2020 | sfranzyshen
 */
 
-let Otto9HW = function() {
-  this._servo = [require('oscillator').init(), require('oscillator').init(), require('oscillator').init(), require('oscillator').init()]
-  this._servo_pins = [0, 0, 0, 0]
-  this._servo_trim = [0, 0, 0, 0]
-  this._servo_position = [90, 90, 90, 90] // initialised to what the oscillator code defaults to 
-  this._final_time = 0
-  this._partial_time = 0
-  this._increment = [0, 0, 0, 0]
-  this._isOttoResting = true
+var Otto9HW = function() {
+  this._servo = [require('oscillator').init(), require('oscillator').init(), require('oscillator').init(), require('oscillator').init()];
+  this._servo_pins = [0, 0, 0, 0];
+  this._servo_trim = [0, 0, 0, 0];
+  this._servo_position = [90, 90, 90, 90]; // initialised to what the oscillator code defaults to 
+  this._final_time = 0;
+  this._partial_time = 0;
+  this._increment = [0, 0, 0, 0];
+  this._isOttoResting = true;
 };
 
 Otto9HW.prototype.init = function(YL, YR, RL, RR, load_calibration, NoiseSensor, Buzzer, USTrigger, USEcho) {
@@ -94,7 +94,7 @@ Otto9HW.prototype._moveServos = function(time, servo_target) {
   for(i = 0; i < 4; i++) {
     this._servo_position[i] = servo_target[i];
   }
-}
+};
 
 Otto9HW.prototype._moveSingle = function(position, servo_number) {
   if(position > 180) { position = 180; }
@@ -167,7 +167,7 @@ Otto9HW.prototype.sleep_ms = function(milliseconds) {
 };
 
 Otto9HW.prototype._DEG2RAD = function(g) {
-  ((g) * Math.PI) / 180;
+  return ((g) * Math.PI) / 180;
 };
 
 // PREDETERMINED MOTION SEQUENCES
@@ -455,7 +455,7 @@ Otto9HW.prototype.flapping = function(steps, T, h, dir) {
   this._execute(A, O, T, phase_diff, steps); 
 };
 
-exports.init = function() {
+exports.connect = function() {
   return new Otto9HW();
 };
 
