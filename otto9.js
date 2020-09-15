@@ -22,8 +22,9 @@ Otto9HW.prototype.init = function(YL, YR, RL, RR, load_calibration, NoiseSensor,
   this.setRestState(false);
 
   if(load_calibration) {
+    let servo_trim = 0;
     for(i = 0; i < 4; i++) {
-      let servo_trim = 0; // FIXME EEPROM.read(i);
+      servo_trim = 0; // FIXME EEPROM.read(i);
       if(servo_trim > 128) { 
         servo_trim -= 256;
       }
@@ -75,8 +76,9 @@ Otto9HW.prototype._moveServos = function(time, servo_target) {
     }
 
     let final_time = (getTime() * 1000) + time;
+    let partial_time = 0;
     for(iteration = 1; getTime() * 1000 < final_time; iteration++) {
-      let partial_time = (getTime() * 1000) + 10;
+      partial_time = (getTime() * 1000) + 10;
       for(i = 0; i < 4; i++) {
         this._servo[i].SetPosition(this._servo_position[i] + (iteration * this._increment[i]));
       }
@@ -253,10 +255,11 @@ Otto9HW.prototype.bend = function(steps, T, dir) {
   // Time of the bend movement. Fixed parameter to avoid falls
   let T2 = 800;
   // Bend movement
+  let t = 0;
   for (i = 0; i < steps; i++) {
     this._moveServos(T2 / 2, bend1);
     this._moveServos(T2 / 2, bend2);
-    let t = (getTime() * 1000) + (T * 0.8);
+    t = (getTime() * 1000) + (T * 0.8);
     while((getTime() * 1000) < t);
     this._moveServos(500, homes);
   }
