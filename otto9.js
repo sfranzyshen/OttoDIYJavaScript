@@ -159,7 +159,7 @@ Otto9HW.prototype.setRestState = function(state) {
   this._isOttoResting = state;
 };
 
-Otto9HW.prototype.sleep = function(milliseconds) {
+Otto9HW.prototype.sleep_ms = function(milliseconds) {
   let currentTime = null;
   do {
     currentTime = getTime() * 1000;
