@@ -3,7 +3,11 @@ Otto All moves JavaScript test
 OttDIY JavaScript Project, 2020 | sfranzyshen
 */
 
-Otto = require('otto9').init();
+require('oscillator');
+require('otto_servo');
+require('otto9');
+
+let Otto = require('otto9').init();
 Otto.init(5, 12, 13, 14, True, 0, 1, 2, 3);
 Otto.home();
 
