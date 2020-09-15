@@ -37,17 +37,15 @@ Otto9HW.prototype.init = function(YL, YR, RL, RR, load_calibration, NoiseSensor,
 
 // ATTACH & DETACH FUNCTIONS
 Otto9HW.prototype.attachServos = function() {
-    this._servo[0].attach(this._servo_pins[0]);
-    this._servo[1].attach(this._servo_pins[1]);
-    this._servo[2].attach(this._servo_pins[2]);
-    this._servo[3].attach(this._servo_pins[3]);
+  for(i = 0; i < 4; i++) { 
+    this._servo[i].attach(this._servo_pins[i]);
+  }
 };
 
 Otto9HW.prototype.detachServos = function() {
-    this._servo[0].detach();
-    this._servo[1].detach();
-    this._servo[2].detach();
-    this._servo[3].detach();
+  for(i = 0; i < 4; i++) { 
+    this._servo[i].detach();
+  }
 };
 
 // OSCILLATORS TRIMS
@@ -65,114 +63,99 @@ Otto9HW.prototype.saveTrimsOnEEPROM = function() {
 };
 
 // BASIC MOTION FUNCTIONS
-void Otto9::_moveServos(int time, int  servo_target[]) {
-
-  attachServos();
-  if(getRestState()==true){
-        setRestState(false);
+Otto9HW.prototype._moveServos = function(time, servo_target) {
+  this.attachServos();
+  if(this.getRestState() === true) {
+    this.setRestState(false);
   }
 
-  if(time>10){
-    for (int i = 0; i < 4; i++) increment[i] = ((servo_target[i]) - servo_position[i]) / (time / 10.0);
-    final_time =  millis() + time;
+  if(time > 10) {
+    for(i = 0; i < 4; i++) {
+      this._increment[i] = ((servo_target[i]) - this._servo_position[i]) / (time / 10.0);
+    }
 
-    for (int iteration = 1; millis() < final_time; iteration++) {
-      partial_time = millis() + 10;
-      for (int i = 0; i < 4; i++) servo[i].SetPosition(servo_position[i] + (iteration * increment[i]));
-      while (millis() < partial_time); //pause
+    final_time = (getTime() * 1000) + time;
+    for(iteration = 1; getTime() * 1000 < final_time; iteration++) {
+      partial_time = (getTime() * 1000) + 10;
+      for(i = 0; i < 4; i++) {
+        this._servo[i].SetPosition(this._servo_position[i] + (iteration * this._increment[i]));
+      }
+      while(getTime() * 1000 < partial_time) {
+        // pause
+      }
+    }
+  } else {
+    for(i = 0; i < 4; i++) {
+      this._servo[i].SetPosition(servo_target[i]);
     }
   }
-  else{
-    for (int i = 0; i < 4; i++) servo[i].SetPosition(servo_target[i]);
-  }
-  for (int i = 0; i < 4; i++) servo_position[i] = servo_target[i];
-}
-
-void Otto9::_moveSingle(int position, int servo_number) {
-if (position > 180) position = 90;
-if (position < 0) position = 90;
-  attachServos();
-  if(getRestState()==true){
-        setRestState(false);
-  }
-int servoNumber = servo_number;
-if (servoNumber == 0){
-  servo[0].SetPosition(position);
-}
-if (servoNumber == 1){
-  servo[1].SetPosition(position);
-}
-if (servoNumber == 2){
-  servo[2].SetPosition(position);
-}
-if (servoNumber == 3){
-  servo[3].SetPosition(position);
-}
-}
-
-void Otto9::oscillateServos(int A[4], int O[4], int T, double phase_diff[4], float cycle=1){
-
-  for (int i=0; i<4; i++) {
-    servo[i].SetO(O[i]);
-    servo[i].SetA(A[i]);
-    servo[i].SetT(T);
-    servo[i].SetPh(phase_diff[i]);
-  }
-  double ref=millis();
-   for (double x=ref; x<=T*cycle+ref; x=millis()){
-     for (int i=0; i<4; i++){
-        servo[i].refresh();
-     }
+  for(i = 0; i < 4; i++) {
+    this._servo_position[i] = servo_target[i];
   }
 }
 
-
-void Otto9::_execute(int A[4], int O[4], int T, double phase_diff[4], float steps = 1.0){
-
-  attachServos();
-  if(getRestState()==true){
-        setRestState(false);
+Otto9HW.prototype._moveSingle = function(position, servo_number) {
+  if(position > 180) { position = 180; }
+  if(position < 0) { position = 0; }
+  this.attachServos();
+  if(this.getRestState() === true) {
+    this.setRestState(false);
   }
+  this._servo[servo_number].SetPosition(position);
+};
 
+Otto9HW.prototype.oscillateServos = function(A, O, T, phase_diff, cycle) {
+  if(cycle === undefined) { cycle = 1.0; }
+  for (i = 0; i < 4; i++) {
+    this._servo[i].SetO(O[i]);
+    this._servo[i].SetA(A[i]);
+    this._servo[i].SetT(T);
+    this._servo[i].SetPh(phase_diff[i]);
+  }
+  ref = getTime() * 1000;
+  for(x = ref; x <= T * cycle + ref; x = getTime() * 1000) {
+    for(i = 0; i < 4; i++) {
+      this._servo[i].refresh();
+    }
+  }
+};
 
-  int cycles=(int)steps;    
+Otto9HW.prototype._execute = function(A, O, T, phase_diff, steps) {
+  if(steps === undefined) { steps = 1.0; }
+  this.attachServos();
+  if(this.getRestState() === true) {
+    this.setRestState(false);
+  }
+  cycles = parseInt(steps);
 
-  //-- Execute complete cycles
-  if (cycles >= 1) 
-    for(int i = 0; i < cycles; i++) 
-      oscillateServos(A,O, T, phase_diff);
+  // Execute complete cycles
+  if(cycles >= 1) { 
+    for(i = 0; i < cycles; i++) {
+      this._oscillateServos(A, O, T, phase_diff);
+    }
+  }
       
-  //-- Execute the final not complete cycle    
-  oscillateServos(A,O, T, phase_diff,(float)steps-cycles);
-}
+  // Execute the final not complete cycle    
+  this._oscillateServos(A, O, T, phase_diff,steps - cycles);
+};
 
-
-
-///////////////////////////////////////////////////////////////////
-//-- HOME = Otto at rest position -------------------------------//
-///////////////////////////////////////////////////////////////////
-void Otto9::home(){
-
-  if(isOttoResting==false){ //Go to rest position only if necessary
-
-    int homes[4]={90, 90, 90, 90}; //All the servos at rest position
-    _moveServos(500,homes);   //Move the servos in half a second
-
-    detachServos();
-    isOttoResting=true;
+// HOME = Otto at rest position
+Otto9HW.prototype.home = function() {
+  if(this._isOttoResting === false) {  // Go to rest position only if necessary
+    homes = [90, 90, 90, 90];          // All the servos at rest position
+    this._moveServos(500, homes);      // Move the servos in half a second
+    this.detachServos();
+    this._isOttoResting = true;
   }
-}
+};
 
-bool Otto9::getRestState(){
+Otto9HW.prototype.getRestState = function() {
+  return this._isOttoResting;
+};
 
-    return isOttoResting;
-}
-
-void Otto9::setRestState(bool state){
-
-    isOttoResting = state;
-}
-
+Otto9HW.prototype.setRestState = function(state) {
+  this._isOttoResting = state;
+};
 
 exports.init = function() {
   return new Otto9HW();
