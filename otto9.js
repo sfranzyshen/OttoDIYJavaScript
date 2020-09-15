@@ -23,7 +23,7 @@ Otto9HW.prototype.init = function(YL, YR, RL, RR, load_calibration, NoiseSensor,
 
   if(load_calibration) {
     for(i = 0; i < 4; i++) {
-      servo_trim = 0; // FIXME EEPROM.read(i);
+      var servo_trim = 0; // FIXME EEPROM.read(i);
       if(servo_trim > 128) { 
         servo_trim -= 256;
       }
@@ -74,9 +74,9 @@ Otto9HW.prototype._moveServos = function(time, servo_target) {
       this._increment[i] = ((servo_target[i]) - this._servo_position[i]) / (time / 10.0);
     }
 
-    final_time = (getTime() * 1000) + time;
+    var final_time = (getTime() * 1000) + time;
     for(iteration = 1; getTime() * 1000 < final_time; iteration++) {
-      partial_time = (getTime() * 1000) + 10;
+      var partial_time = (getTime() * 1000) + 10;
       for(i = 0; i < 4; i++) {
         this._servo[i].SetPosition(this._servo_position[i] + (iteration * this._increment[i]));
       }
@@ -112,7 +112,7 @@ Otto9HW.prototype.oscillateServos = function(A, O, T, phase_diff, cycle) {
     this._servo[i].SetT(T);
     this._servo[i].SetPh(phase_diff[i]);
   }
-  ref = getTime() * 1000;
+  var ref = getTime() * 1000;
   for(x = ref; x <= T * cycle + ref; x = getTime() * 1000) {
     for(i = 0; i < 4; i++) {
       this._servo[i].refresh();
@@ -126,7 +126,7 @@ Otto9HW.prototype._execute = function(A, O, T, phase_diff, steps) {
   if(this.getRestState() === true) {
     this.setRestState(false);
   }
-  cycles = parseInt(steps);
+  var cycles = parseInt(steps);
 
   // Execute complete cycles
   if(cycles >= 1) { 
@@ -142,7 +142,7 @@ Otto9HW.prototype._execute = function(A, O, T, phase_diff, steps) {
 // HOME = Otto at rest position
 Otto9HW.prototype.home = function() {
   if(this._isOttoResting === false) {  // Go to rest position only if necessary
-    homes = [90, 90, 90, 90];          // All the servos at rest position
+    var homes = [90, 90, 90, 90];          // All the servos at rest position
     this._moveServos(500, homes);      // Move the servos in half a second
     this.detachServos();
     this._isOttoResting = true;
@@ -164,9 +164,9 @@ Otto9HW.prototype.setRestState = function(state) {
 //    steps: Number of steps
 //    T: Period
 Otto9HW.prototype.jump = function(steps, T) {
-  up = [90,90,150,30];
+  var up = [90,90,150,30];
   this._moveServos(T, up);
-  down = [90,90,90,90];
+  var down = [90,90,90,90];
   this._moveServos(T, down);
 };
 
@@ -183,9 +183,9 @@ Otto9HW.prototype.walk = function(steps, T, dir) {
   //      -90 : Walk forward
   //       90 : Walk backward
   // Feet servos also have the same offset (for tiptoe a little bit)
-  A = [30, 30, 20, 20];
-  O = [0, 0, 4, -4];
-  phase_diff = [0, 0, this._DEG2RAD(dir * -90), this._DEG2RAD(dir * -90)];
+  var A = [30, 30, 20, 20];
+  var O = [0, 0, 4, -4];
+  var phase_diff = [0, 0, this._DEG2RAD(dir * -90), this._DEG2RAD(dir * -90)];
 
   // Let's oscillate the servos!
   this._execute(A, O, T, phase_diff, steps);
@@ -202,9 +202,9 @@ Otto9HW.prototype.turn = function(steps, T, dir) {
   // When the right hip servo amplitude is higher, the steps taken by
   //   the right leg are bigger than the left. So, the robot describes an 
   //   left arc
-  A = [30, 30, 20, 20];
-  O = [0, 0, 4, -4];
-  phase_diff = [0, 0, this._DEG2RAD(-90), this._DEG2RAD(-90)];
+  var A = [30, 30, 20, 20];
+  var O = [0, 0, 4, -4];
+  var phase_diff = [0, 0, this._DEG2RAD(-90), this._DEG2RAD(-90)];
     
   if(dir === LEFT) {  
     A[0] = 30; // Left hip servo
@@ -226,9 +226,9 @@ Otto9HW.prototype.turn = function(steps, T, dir) {
 //    dir: RIGHT=Right bend LEFT=Left bend
 Otto9HW.prototype.bend = function(steps, T, dir) {
   // Parameters of all the movements. Default: Left bend
-  bend1 = [90, 90, 62, 35]; 
-  bend2 = [90, 90, 62, 105];
-  homes = [90, 90, 90, 90];
+  var bend1 = [90, 90, 62, 35]; 
+  var bend2 = [90, 90, 62, 105];
+  var homes = [90, 90, 90, 90];
   // Time of one bend, constrained in order to avoid movements too fast.
   // T=max(T, 600);
   // Changes in the parameters if right direction is chosen 
@@ -240,7 +240,7 @@ Otto9HW.prototype.bend = function(steps, T, dir) {
     bend2[3] = 180-60;
   }
   // Time of the bend movement. Fixed parameter to avoid falls
-  T2 = 800;
+  var T2 = 800;
   // Bend movement
   for (i = 0; i < steps; i++) {
     this._moveServos(T2 / 2, bend1);
@@ -259,12 +259,12 @@ Otto9HW.prototype.bend = function(steps, T, dir) {
 //    dir: RIGHT=Right leg LEFT=Left leg
 Otto9HW.prototype.shakeLeg = function(steps, T, dir) {
   // This variable change the amount of shakes
-  numberLegMoves = 2;
+  var numberLegMoves = 2;
   // Parameters of all the movements. Default: Right leg
-  shake_leg1 = [90, 90, 58, 35];
-  shake_leg2 = [90, 90, 58, 120];
-  shake_leg3 = [90, 90, 58, 60];
-  homes = [90, 90, 90, 90];
+  var shake_leg1 = [90, 90, 58, 35];
+  var shake_leg2 = [90, 90, 58, 120];
+  var shake_leg3 = [90, 90, 58, 60];
+  var homes = [90, 90, 90, 90];
   // Changes in the parameters if left leg is chosen
   if(dir === -1) {
     shake_leg1[2] = 180 - 35;
@@ -276,7 +276,7 @@ Otto9HW.prototype.shakeLeg = function(steps, T, dir) {
   }
   
   // Time of the bend movement. Fixed parameter to avoid falls
-  T2 = 1000;
+  var T2 = 1000;
   // Time of one shake, constrained in order to avoid movements too fast.            
   T = T - T2;
   T = Math.max(T, 200 * numberLegMoves);
@@ -292,7 +292,9 @@ Otto9HW.prototype.shakeLeg = function(steps, T, dir) {
     this._moveServos(500, homes); // Return to home position
   }
   var t = (getTime() * 1000) + T;
-  while((getTime() * 1000) < t);
+  while((getTime() * 1000) < t) {
+    // pause
+  }
 };
 
 // Otto movement: up & down
@@ -306,9 +308,9 @@ Otto9HW.prototype.updown = function(steps, T, h) {
   // Feet amplitude and offset are the same
   // Initial phase for the right foot is -90, so that it starts
   //   in one extreme position (not in the middle)
-  A = [0, 0, h, h];
-  O = [0, 0, h, -h];
-  phase_diff = [0, 0, this._DEG2RAD(-90), this._DEG2RAD(90)];
+  var A = [0, 0, h, h];
+  var O = [0, 0, h, -h];
+  var phase_diff = [0, 0, this._DEG2RAD(-90), this._DEG2RAD(90)];
  
   // Let's oscillate the servos!
   this._execute(A, O, T, phase_diff, steps);
@@ -322,9 +324,9 @@ Otto9HW.prototype.updown = function(steps, T, h) {
 Otto9HW.prototype.swing = function(steps, T, h) {
   // Both feets are in phase. The offset is half the amplitude
   // It causes the robot to swing from side to side
-  A = [0, 0, h, h];
-  O = [0, 0, h / 2, -h / 2];
-  phase_diff = [0, 0, this._DEG2RAD(0), this._DEG2RAD(0)];
+  var A = [0, 0, h, h];
+  var O = [0, 0, h / 2, -h / 2];
+  var phase_diff = [0, 0, this._DEG2RAD(0), this._DEG2RAD(0)];
   
   // Let's oscillate the servos!
   this._execute(A, O, T, phase_diff, steps); 
@@ -338,9 +340,9 @@ Otto9HW.prototype.swing = function(steps, T, h) {
 Otto9HW.prototype.tiptoeSwing = function(steps, T, h) {
   // Both feets are in phase. The offset is not half the amplitude in order to tiptoe
   // It causes the robot to swing from side to side
-  A = [0, 0, h, h];
-  O = [0, 0, h, -h];
-  phase_diff = [0, 0, 0, 0];
+  var A = [0, 0, h, h];
+  var O = [0, 0, h, -h];
+  var phase_diff = [0, 0, 0, 0];
   
   // Let's oscillate the servos!
   this._execute(A, O, T, phase_diff, steps);
@@ -358,9 +360,9 @@ Otto9HW.prototype.jitter = function(steps, T, h) {
   //   in one extreme position (not in the middle)
   // h is constrained to avoid hit the feets
   h = Math.min(25, h);
-  A = [h, h, 0, 0];
-  O = [0, 0, 0, 0];
-  phase_diff = [this._DEG2RAD(-90), this.DEG2RAD(90), 0, 0];
+  var A = [h, h, 0, 0];
+  var O = [0, 0, 0, 0];
+  var phase_diff = [this._DEG2RAD(-90), this.DEG2RAD(90), 0, 0];
   
   // Let's oscillate the servos!
   this._execute(A, O, T, phase_diff, steps);
@@ -377,9 +379,9 @@ Otto9HW.prototype.ascendingTurn = function(steps, T, h) {
   //   in one extreme position (not in the middle)
   // h is constrained to avoid hit the feets
   h = Math.min(13, h);
-  A = [h, h, h, h];
-  O = [0, 0, h + 4, -h + 4];
-  phase_diff = [this._DEG2RAD(-90), this._DEG2RAD(90), this._DEG2RAD(-90), this._DEG2RAD(90)];
+  var A = [h, h, h, h];
+  var O = [0, 0, h + 4, -h + 4];
+  var phase_diff = [this._DEG2RAD(-90), this._DEG2RAD(90), this._DEG2RAD(-90), this._DEG2RAD(90)];
 
   // Let's oscillate the servos!
   this._execute(A, O, T, phase_diff, steps); 
@@ -400,10 +402,10 @@ Otto9HW.prototype.moonwalker = function(steps, T, h, dir) {
   //  is 60 degrees.
   //  Both amplitudes are equal. The offset is half the amplitud plus a little bit of
   //  offset so that the robot tiptoe lightly
-  A = [0, 0, h, h];
-  O = [0, 0, h / 2 + 2, -h / 2 - 2];
-  phi = -dir * 90;
-  phase_diff = [0, 0, this._DEG2RAD(phi), this._DEG2RAD(-60 * dir + phi)];
+  var A = [0, 0, h, h];
+  var O = [0, 0, h / 2 + 2, -h / 2 - 2];
+  var phi = -dir * 90;
+  var phase_diff = [0, 0, this._DEG2RAD(phi), this._DEG2RAD(-60 * dir + phi)];
   
   // Let's oscillate the servos!
   this._execute(A, O, T, phase_diff, steps); 
@@ -416,9 +418,9 @@ Otto9HW.prototype.moonwalker = function(steps, T, h, dir) {
 //     h: height (Values between 20 - 50)
 //     dir:  Direction: LEFT / RIGHT
 Otto9HW.prototype.crusaito = function(steps, T, h, dir) {
-  A = [25, 25, h, h];
-  O = [0, 0, h / 2 + 4, -h / 2 - 4];
-  phase_diff = [90, 90, this._DEG2RAD(0), this._DEG2RAD(-60 * dir)];
+  var A = [25, 25, h, h];
+  var O = [0, 0, h / 2 + 4, -h / 2 - 4];
+  var phase_diff = [90, 90, this._DEG2RAD(0), this._DEG2RAD(-60 * dir)];
   
   // Let's oscillate the servos!
   this._execute(A, O, T, phase_diff, steps); 
@@ -431,9 +433,9 @@ Otto9HW.prototype.crusaito = function(steps, T, h, dir) {
 //    h: height (Values between 10 - 30)
 //    dir: direction: FOREWARD, BACKWARD
 Otto9HW.prototype.flapping = function(steps, T, h, dir) {
-  A = [12, 12, h, h];
-  O = [0, 0, h - 10, -h + 10];
-  phase_diff = [this._DEG2RAD(0), this._DEG2RAD(180), this._DEG2RAD(-90 * dir), this._DEG2RAD(90 * dir)];
+  var A = [12, 12, h, h];
+  var O = [0, 0, h - 10, -h + 10];
+  var phase_diff = [this._DEG2RAD(0), this._DEG2RAD(180), this._DEG2RAD(-90 * dir), this._DEG2RAD(90 * dir)];
   
   // Let's oscillate the servos!
   this._execute(A, O, T, phase_diff, steps); 
@@ -442,3 +444,5 @@ Otto9HW.prototype.flapping = function(steps, T, h, dir) {
 exports.init = function() {
   return new Otto9HW();
 };
+
+//end
