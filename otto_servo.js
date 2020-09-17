@@ -1,7 +1,7 @@
-/*
+/**
 A simple class for controlling hobby servos. Modeled after the ESP8266 Arduino Servo Driver
-OttoDIY JavaScript Project, 2020 | sfranzyshen
-*/ 
+OttDIY JavaScript Project, 2020 | sfranzyshen
+**/ 
 
 var ServoHW = function(options) {
   this._pin = undefined;
@@ -30,7 +30,7 @@ var ServoHW = function(options) {
 
   this._period = 1000 / this._freq;
   this._valueStart = this._pulseMin / this._period;
-  var pulsDiff = this._pulseMax - this._pulseMin;
+  let pulsDiff = this._pulseMax - this._pulseMin;
   this._valueStep = pulsDiff / (this._valueMax - this._valueMin) / this._period;
 };
 
@@ -74,3 +74,5 @@ ServoHW.prototype.write_us = function(value) {
 exports.init = function(options) {
   return new ServoHW(options);
 };
+
+//end
