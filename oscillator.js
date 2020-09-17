@@ -1,5 +1,5 @@
 /*
-JavaScript driver to generate sinusoidal oscillations in the servos
+JavaScript driver to Generate sinusoidal oscillations in the servos
 Oscillator.pde: GPL license (c) Juan Gonzalez-Gomez (Obijuan), 2011
 OttoDIY JavaScript Project, 2020 | sfranzyshen
 */
@@ -157,3 +157,5 @@ OscillatorHW.prototype.__next_sample = function() {
 exports.init = function(options) {
   return new OscillatorHW(options);
 };
+
+//end
