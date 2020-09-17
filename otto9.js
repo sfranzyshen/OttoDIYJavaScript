@@ -106,7 +106,7 @@ Otto9HW.prototype._moveSingle = function(position, servo_number) {
   this._servo[servo_number].SetPosition(position);
 };
 
-Otto9HW.prototype.oscillateServos = function(A, O, T, phase_diff, cycle) {
+Otto9HW.prototype._oscillateServos = function(A, O, T, phase_diff, cycle) {
   if(cycle === undefined) { cycle = 1.0; }
   for (i = 0; i < 4; i++) {
     this._servo[i].SetO(O[i]);
@@ -219,7 +219,7 @@ Otto9HW.prototype.turn = function(steps, T, dir) {
   let O = [0, 0, 4, -4];
   let phase_diff = [0, 0, this._DEG2RAD(-90), this._DEG2RAD(-90)];
     
-  if(dir === LEFT) {  
+  if(dir === 1) {  
     A[0] = 30; // Left hip servo
     A[1] = 10; // Right hip servo
   }
@@ -376,7 +376,7 @@ Otto9HW.prototype.jitter = function(steps, T, h) {
   h = Math.min(25, h);
   let A = [h, h, 0, 0];
   let O = [0, 0, 0, 0];
-  let phase_diff = [this._DEG2RAD(-90), this.DEG2RAD(90), 0, 0];
+  let phase_diff = [this._DEG2RAD(-90), this._DEG2RAD(90), 0, 0];
   
   // Let's oscillate the servos!
   this._execute(A, O, T, phase_diff, steps);
@@ -455,7 +455,7 @@ Otto9HW.prototype.flapping = function(steps, T, h, dir) {
   this._execute(A, O, T, phase_diff, steps); 
 };
 
-exports.connect = function() {
+exports.init = function() {
   return new Otto9HW();
 };
 
