@@ -8,9 +8,10 @@ require('otto_servo');
 require('otto9');
 
 let Otto = require('otto9').init();
-Otto.init(5, 12, 13, 14, True, 0, 1, 2, 3);
+Otto.init(5, 12, 13, 14, true, 0, 1, 2, 3);
 Otto.home();
 
+/*
 Otto.walk(2, 1000, 1);           // 2 steps, "TIME". IF HIGHER THE VALUE THEN SLOWER (from 600 to 1400), 1 FORWARD
 Otto.walk(2, 1000, -1);					// 2 steps, T, -1 BACKWARD 
 Otto.turn(2, 1000, 1);					  // 3 steps turning LEFT
@@ -40,3 +41,6 @@ Otto.jump(1, 2000);
 
 Otto.home();
 
+*/
+
+//end
