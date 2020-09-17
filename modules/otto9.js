@@ -75,14 +75,14 @@ Otto9HW.prototype._moveServos = function(time, servo_target) {
       this._increment[i] = ((servo_target[i]) - this._servo_position[i]) / (time / 10.0);
     }
 
-    let final_time = (getTime() * 1000) + time;
+    let final_time = parseInt(Date().getTime()) + time;
     let partial_time = 0;
-    for(iteration = 1; getTime() * 1000 < final_time; iteration++) {
-      partial_time = (getTime() * 1000) + 10;
+    for(iteration = 1; parseInt(Date().getTime()) < final_time; iteration++) {
+      partial_time = parseInt(Date().getTime()) + 10;
       for(i = 0; i < 4; i++) {
         this._servo[i].SetPosition(this._servo_position[i] + (iteration * this._increment[i]));
       }
-      while(getTime() * 1000 < partial_time) {
+      while(parseInt(Date().getTime()) < partial_time) {
         // pause
       }
     }
@@ -114,8 +114,8 @@ Otto9HW.prototype._oscillateServos = function(A, O, T, phase_diff, cycle) {
     this._servo[i].SetT(T);
     this._servo[i].SetPh(phase_diff[i]);
   }
-  let ref = getTime() * 1000;
-  for(x = ref; x <= T * cycle + ref; x = getTime() * 1000) {
+  let ref = parseInt(Date().getTime());
+  for(x = ref; x <= T * cycle + ref; x = parseInt(Date().getTime())) {
     for(i = 0; i < 4; i++) {
       this._servo[i].refresh();
     }
@@ -160,10 +160,10 @@ Otto9HW.prototype.setRestState = function(state) {
 };
 
 Otto9HW.prototype.sleep_ms = function(milliseconds) {
-  let currentTime = null;
-  do {
-    currentTime = getTime() * 1000;
-  } while (currentTime - (getTime() * 1000) < milliseconds);
+  let currentTime = parseInt(Date().getTime());
+  while(currentTime - parseInt(Date().getTime()) < milliseconds) {
+    // pause
+  }
 };
 
 Otto9HW.prototype._DEG2RAD = function(g) {
@@ -259,8 +259,10 @@ Otto9HW.prototype.bend = function(steps, T, dir) {
   for (i = 0; i < steps; i++) {
     this._moveServos(T2 / 2, bend1);
     this._moveServos(T2 / 2, bend2);
-    t = (getTime() * 1000) + (T * 0.8);
-    while((getTime() * 1000) < t);
+    t = parseInt(Date().getTime()) + (T * 0.8);
+    while(parseInt(Date().getTime()) < t) {
+      //
+    }
     this._moveServos(500, homes);
   }
 };
@@ -305,8 +307,8 @@ Otto9HW.prototype.shakeLeg = function(steps, T, dir) {
     }
     this._moveServos(500, homes); // Return to home position
   }
-  let t = (getTime() * 1000) + T;
-  while((getTime() * 1000) < t) {
+  let t = parseInt(Date().getTime()) + T;
+  while(parseInt(Date().getTime()) < t) {
     // pause
   }
 };
