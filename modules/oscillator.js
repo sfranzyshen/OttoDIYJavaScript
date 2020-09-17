@@ -12,7 +12,7 @@ var OscillatorHW = function(trim) {
   // Oscillators parameters
   this._A = 0;                // Amplitude (degrees)
   this._O = 0;                // Offset (degrees)
-  this._T = 0.0;              // Period (miliseconds)
+  this._T = 0;              // Period (miliseconds)
   this._phase0 = 0.0;         // Phase (radians)
 
   // Internal variables
@@ -22,9 +22,9 @@ var OscillatorHW = function(trim) {
   this._phase = 0.0;          // Current phase
   this._inc = 0.0;            // Increment of phase
   this._N = 0.0;              // Number of samples
-  this._TS = 0.0;             // sampling period (ms)
-  this._previousMillis = 0.0; 
-  this._currentMillis = 0.0;
+  this._TS = 0;               // sampling period (ms)
+  this._previousMillis = 0; 
+  this._currentMillis = 0;
   this._stop = true;          // Oscillation mode. If true, the servo is stopped
   this._rev = false;          // Reverse mode
 };
@@ -50,7 +50,7 @@ OscillatorHW.prototype.attach = function(pin, rev) {
     this._T = 2000;
     this._N = this._T / this._TS;
     this._inc = 2 * Math.PI / this._N;
-    this._previousMillis = 0.0;
+    this._previousMillis = 0;
 
     // Default parameters
     this._A = 45;
@@ -145,7 +145,7 @@ OscillatorHW.prototype.refresh = function() {
 // the last sample was taken
 OscillatorHW.prototype.__next_sample = function() {
   // Read current time
-  this._currentMillis = getTime() * 1000;
+  this._currentMillis = parseInt(Date().getTime());
  
   // Check if the timeout has passed
   if(this._currentMillis - this._previousMillis > this._TS) {
