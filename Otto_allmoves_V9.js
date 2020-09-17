@@ -1,6 +1,6 @@
 /*
 Otto All moves JavaScript test 
-OttDIY JavaScript Project, 2020 | sfranzyshen
+OttoDIY JavaScript Project, 2020 | sfranzyshen
 */
 
 require('oscillator');
