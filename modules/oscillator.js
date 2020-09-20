@@ -152,6 +152,7 @@ OscillatorHW.prototype.__next_sample = function() {
     this._previousMillis = this._currentMillis;   
     return true;
   }
+  return false;
 };
 
 exports.init = function(options) {
